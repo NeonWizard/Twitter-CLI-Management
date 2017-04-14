@@ -5,6 +5,7 @@ import time
 class Account:
 	def __init__(self, id):
 		self.API = Twython("U8NXVVgoLFmCINZqMiE7Fhi9G", "27sx2V6j2FSIW2kMpDu6OrEe1NfhRYbbUXmVMWRlAMErJR1jWD", "850089475128438784-k1JMEgPaTaIyTrE1hpQwyJraXWQVWLw", "8wZNArpbRHcyHHGziYSJxYYfPOMdcUrKCcZPMpXXVfX2O")
+		self.screenName = self.API.verify_credentials()["screen_name"]
 		self.id = id
 
 		self.hasFollowed = set()									# People that HAVE been followed by this account but aren't currently
