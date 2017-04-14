@@ -5,6 +5,7 @@ import time
 class Account:
 	def __init__(self, id):
 		self.API = Twython("***REMOVED***", "***REMOVED***", "***REMOVED***", "***REMOVED***")
+		self.screenName = self.API.verify_credentials()["screen_name"]
 		self.id = id
 
 		self.hasFollowed = set()									# People that HAVE been followed by this account but aren't currently
