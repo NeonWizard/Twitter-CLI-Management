@@ -22,14 +22,14 @@ def main():
 	looping = True
 	while looping:
 		print(chr(27) + "[2J")
-		print("==========================")
-		print("What would you like to do?")
-		print("==========================")
+		print("==================================")
+		print("    \033[1mWhat would you like to do?\033[0m")
+		print("==================================")
 		print()
-		print("1 - Follow back all followers.")
-		print("2 - Follow [x] of [target]'s followers.")
-		print("3 - Unfollow everyone who doesn't follow you.")
-		print("4 - Exit.")
+		print("\033[93m1\033[0m - Follow back all followers.")
+		print("\033[93m2\033[0m - Follow [x] of [target]'s followers.")
+		print("\033[93m3\033[0m - Unfollow everyone who doesn't follow you.")
+		print("\033[93m4\033[0m - Exit.")
 		print()
 		option = int(input("> "))
 		if option == 1:
@@ -39,6 +39,7 @@ def main():
 			print(chr(27) + "[2J")
 			ID = int(input("Enter target account's ID: "))
 			amount = int(input("Enter amount to follow: "))
+			print()
 			acc.followAllOf(ID, amount)
 		elif option == 3:
 			acc.unfollowNonFollowers()
