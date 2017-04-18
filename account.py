@@ -1,4 +1,4 @@
-from twython import Twython, TwythonError
+from twython import Twython, TwythonError, TwythonRateLimitError
 import random
 import time
 
@@ -7,6 +7,8 @@ class Account:
 		self.API = Twython(**keys)
 		self.screenName = self.API.verify_credentials()["screen_name"]
 		self.id = id
+
+		self.followedFile = open("hasfollowed.txt", 'r+')
 
 		self.loadFollowed()											# The followed set includes people that have been followed OR are currently being followed
 		self.isFollowed = set(self.API.get_friends_ids()["ids"])	# The isFollowed set ONLY includes people currently being followed
@@ -20,23 +22,26 @@ class Account:
 	# 	print("done.")
 
 	def writeFollowed(self, ID):
-		with open("hasfollowed.txt", 'a') as openFile:
-			openFile.write(str(ID) + "\n")
+		self.followedFile.write(str(ID) + "\n")
 
 	def loadFollowed(self):
 		self.followed = set()
 
 		print("Loading followed... ", end="")
-		with open("hasfollowed.txt", 'r') as openFile:
-			for line in openFile:
-				line = line.rstrip("\n")
-				self.followed.add(int(line))
+		for line in self.followedFile:
+			line = line.rstrip("\n")
+			self.followed.add(int(line))
 		print("done.")
 
 	def follow(self, ID):
 		try:
+			toFollow = self.API.show_user(user_id=ID)
 			self.API.create_friendship(user_id=ID)
-			print("Followed {}!".format(ID))
+
+			if toFollow["protected"]:
+				print("Sent a follow request to \033[93m{}\033[0m!".format(ID))
+			else:
+				print("Followed \033[92m{}\033[0m!".format(ID))
 
 			self.followed.add(ID)
 			self.writeFollowed(ID)
@@ -44,7 +49,9 @@ class Account:
 			return True
 		except TwythonError as e:
 			# This is mostly just for users I've already requested to follow but haven't accepted yet
-			# print(e)
+			print(e)
+			if isinstance(e, TwythonRateLimitError):
+				raise TwythonRateLimitError
 			return False
 
 	def followAllOf(self, target_id, amount=1000):
