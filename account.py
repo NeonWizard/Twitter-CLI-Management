@@ -49,7 +49,7 @@ class Account:
 			return True
 		except TwythonError as e:
 			# This is mostly just for users I've already requested to follow but haven't accepted yet
-			print(e)
+			# print(e)
 			if isinstance(e, TwythonRateLimitError):
 				raise TwythonRateLimitError
 			return False
