@@ -48,10 +48,13 @@ class Account:
 
 			return True
 		except TwythonError as e:
+			print(e)
 			# This is mostly just for users I've already requested to follow but haven't accepted yet
-			# print(e)
 			if isinstance(e, TwythonRateLimitError):
 				raise TwythonRateLimitError
+			elif "already requested" in str(e) or "blocked" in str(e):
+				self.followed.add(ID)
+				self.writeFollowed(ID)
 			return False
 
 	def followAllOf(self, target_id, amount=1000):
