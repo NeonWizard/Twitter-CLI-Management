@@ -70,7 +70,7 @@ class Account:
 				continue
 
 			# Make a tiny bit of a delay so it doesn't flood the Twitter servers
-			time.sleep(random.randrange(1, 6) / 10.0)
+			time.sleep(random.randrange(1, 4) * 2)
 
 			# Keep count so we can break once we follow [amount] users
 			count += 1
