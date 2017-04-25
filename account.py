@@ -90,6 +90,8 @@ class Account:
 
 	def followBackAll(self):
 		for follower_id in self.followers:
+			if follower_id in self.followed: continue
+
 			if follower_id not in self.isFollowed:
 				self.follow(follower_id)
 
