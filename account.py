@@ -95,18 +95,3 @@ class Account:
 			if follower_id not in self.isFollowed:
 				self.follow(follower_id)
 
-
-def main():
-	spooky = Account(id=850089475128438784, keys={
-		"app_key": "***REMOVED***",
-		"app_secret": "***REMOVED***",
-		"oauth_token": "***REMOVED***",
-		"oauth_token_secret": "***REMOVED***"
-	})
-
-	spooky.followAllOf(target_id=2432753774, amount=2)	# Follow a few of Telepathics' followers
-	spooky.followBackAll()
-	# spooky.unfollowNonFollowers()
-
-if __name__ == "__main__":
-	main()
