@@ -1,13 +1,14 @@
+import os
 from account import Account
 
 def promptUserAuth():
 	ID = int(input("Please enter your Twitter ID: "))
 	
 	keys = {
-		"app_key": input("Please enter your app key: "),
-		"app_secret": input("Please enter your app secret: "),
-		"oauth_token": input("Please enter your oauth token: "),
-		"oauth_token_secret": input("Please enter your oauth token secret: ")
+		"app_key": os.environ["TWITTER_API_KEY"] if "TWITTER_API_KEY" in os.environ else input("Please enter your app key: "),
+		"app_secret": os.environ["TWITTER_API_SECRET"] if "TWITTER_API_SECRET" in os.environ else input("Please enter your app secret: "),
+		"oauth_token": os.environ["TWITTER_TOKEN"] if "TWITTER_TOKEN" in os.environ else input("Please enter your oauth token: "),
+		"oauth_token_secret": os.environ["TWITTER_TOKEN_SECRET"] if "TWITTER_TOKEN_SECRET" in os.environ else input("Please enter your oauth token secret: ")
 	}
 
 	return ID, keys
