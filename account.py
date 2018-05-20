@@ -57,6 +57,7 @@ class Account:
 				self.writeFollowed(ID)
 			return False
 
+	# Follows [amount] followers of [target_id]'s account
 	def followAllOf(self, target_id, amount=1000):
 		amount = min(amount, 1000)
 		count = 0
@@ -77,6 +78,7 @@ class Account:
 			if count >= amount:
 				break
 
+	# Unfollows anyone that isn't following the account
 	def unfollowNonFollowers(self):
 		unfollowed = set()
 		for followed_id in self.isFollowed:
@@ -88,6 +90,7 @@ class Account:
 
 		self.isFollowed = self.isFollowed - unfollowed
 
+	# Follow back everyone that is following me
 	def followBackAll(self):
 		for follower_id in self.followers:
 			if follower_id in self.followed: continue
@@ -95,3 +98,6 @@ class Account:
 			if follower_id not in self.isFollowed:
 				self.follow(follower_id)
 
+	# Unfollow [amount] people I've followed who aren't following me - in chronological order
+	def unfollowFollowedChronologicalNonFollowers(self, amount): # what a mouthful
+		pass
