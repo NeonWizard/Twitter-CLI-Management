@@ -4,26 +4,30 @@ from account import Account
 def promptUserAuth():
 	ID = int(input("Please enter your Twitter ID: "))
 	
-	keys = {
+	twitter_keys = {
 		"app_key": os.environ["TWITTER_API_KEY"] if "TWITTER_API_KEY" in os.environ else input("Please enter your app key: "),
 		"app_secret": os.environ["TWITTER_API_SECRET"] if "TWITTER_API_SECRET" in os.environ else input("Please enter your app secret: "),
 		"oauth_token": os.environ["TWITTER_TOKEN"] if "TWITTER_TOKEN" in os.environ else input("Please enter your oauth token: "),
 		"oauth_token_secret": os.environ["TWITTER_TOKEN_SECRET"] if "TWITTER_TOKEN_SECRET" in os.environ else input("Please enter your oauth token secret: ")
 	}
 
-	return ID, keys
+	aws_keys = {
+		"key": os.environ["S3_KEY"] if "S3_KEY" in os.environ else input("Please enter your S3 key: "),
+		"secret_key": os.environ["S3_SECRET_KEY"] if "S3_SECRET_KEY" in os.environ else input("Please enter your S3 secret key: ")
+	}
+
+	return ID, twitter_keys, aws_keys
 
 def main():
-	ID, keys = promptUserAuth()
-	acc = Account(id=ID, keys=keys)
-
-	print("Hello @{}!".format(acc.screenName))
+	ID, twitter_keys, aws_keys = promptUserAuth()
+	acc = Account(id=ID, twitter_keys=twitter_keys, aws_keys=aws_keys)
 
 	print("\n" * 50)
 	looping = True
 	while looping:
 		print(chr(27) + "[2J")
 		print("==================================")
+		print("        Hello @{}!".format(acc.screenName))
 		print("    \033[1mWhat would you like to do?\033[0m")
 		print("==================================")
 		print()
@@ -48,5 +52,7 @@ def main():
 			looping = False
 		else:
 			print("Invalid option.")
+
+		acc.triggerDump(force=True)
 
 main()
