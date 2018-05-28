@@ -23,7 +23,7 @@ class Account:
 	def dumpFollowed(self):
 		print("Dumping followed... ", end="")
 		self.followedS3File.set_contents_from_string(
-			"\n".join([str(followed) for followed in self.followed])
+			"\n".join(["{}:{}".format(*followed) for followed in self.followedE])
 		)
 		print("done.")
 
@@ -37,14 +37,22 @@ class Account:
 
 	def loadFollowed(self):
 		self.followed = set()
+		self.followedE = []
 
 		print("Loading followed... ", end="")
 		raw = self.followedS3File.get_contents_as_string().decode().split("\n")
 		for line in raw:
 			if not line: continue
-			line = line.rstrip("\n")
-			self.followed.add(int(line))
+			line = line.rstrip("\n").split(":")
+
+			self.followed.add(int(line[0]))
+			self.followedE.append((int(line[0]), int(line[1])))
+
 		print("done.")
+
+	def addFollowed(self, ID):
+		self.followed.add(int(ID))
+		self.followedE.append((int(ID), int(time.time())))
 
 	def follow(self, ID):
 		self.followCount += 1
@@ -57,7 +65,7 @@ class Account:
 			else:
 				print("Followed \033[92m{}\033[0m!".format(ID))
 
-			self.followed.add(ID)
+			self.addFollowed(ID)
 
 			# self.writeFollowed(ID)
 			self.triggerDump()
@@ -69,7 +77,7 @@ class Account:
 			if isinstance(e, TwythonRateLimitError):
 				raise TwythonRateLimitError
 			elif "already requested" in str(e) or "blocked" in str(e):
-				self.followed.add(ID)
+				self.addFollowed(ID)
 
 				# self.writeFollowed(ID)
 				self.triggerDump()
